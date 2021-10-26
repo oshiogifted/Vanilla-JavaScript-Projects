@@ -48,4 +48,43 @@ const displayWord = () => {
   }
 }
 
+// Update the wrong letters
+const updateWrongLettersEl = () => {
+  console.log('update wrong');
+}
+
+// Show notification
+const showNotification = () => {
+  notification.classList.add('show');
+
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 2000);
+}
+
+// Keydown letter press
+window.addEventListener('keydown', e => {
+  //console.log(e.key);
+  if (e.key >= 'a' && e.key <= 'z') {
+    const letter = e.key;
+
+    if (selectedWord.includes(letter)) {
+      if (!correctLetters.includes(letter)) {
+        correctLetters.push(letter)
+        displayWord();
+      } else {
+        showNotification();
+      }
+    } else {
+      if (!wrongLetters.includes(letter)) {
+        wrongLetters.push(letter);
+        updateWrongLettersEl();
+      } else {
+        showNotification();
+      }
+    }
+  }
+
+});
+
 displayWord();
