@@ -1,12 +1,12 @@
 const wordEl = document.getElementById('word');
 const wrongLettersEl = document.getElementById('wrong-letters');
-const playAgainBtn = document.getElementById('play-again');
+const playAgainBtn = document.getElementById('play-button');
 const popup = document.getElementById('popup-container');
 const notification = document.getElementById('notification-container');
 const finalMessage = document.getElementById('final-message');
 const figureParts = document.querySelectorAll('.figure-part')
 
-
+// note: can add more words or make a request to a database for more words
 const words = [
   'application',
   'programming',
@@ -22,7 +22,7 @@ const words = [
 
 let selectedWord = words[Math.floor(Math.random() * words.length)];
 
-const correctLetters = ['w', 'i', 'z', 'a', 'r', 'd'];
+const correctLetters = [];
 const wrongLetters = [];
 
 // Show hidden word
@@ -50,7 +50,28 @@ const displayWord = () => {
 
 // Update the wrong letters
 const updateWrongLettersEl = () => {
-  console.log('update wrong');
+  // Display wrong letters
+  wrongLettersEl.innerHTML = `
+    ${wrongLetters.length > 0 ? '<p>Wrong</p>' : ''}
+    ${wrongLetters.map(letter => `<span>${letter}</span>`)}
+  `;
+
+  // Display figure parts
+  figureParts.forEach((part, index) => {
+    const errors = wrongLetters.length;
+
+    if (index < errors) {
+      part.style.display = 'block';
+    } else {
+      part.style.display = 'none';
+    }
+  });
+
+  // Check if lost
+  if (wrongLetters.length === figureParts.length) {
+    finalMessage.innerText = 'Unfortunately you lost. 😞';
+    popup.style.display = 'flex';
+  }
 }
 
 // Show notification
@@ -86,5 +107,21 @@ window.addEventListener('keydown', e => {
   }
 
 });
+
+// Restart game and play again
+playAgainBtn.addEventListener('click', () => {
+  // Empty arrays
+  correctLetters.splice(0);
+  wrongLetters.splice(0);
+
+  // Get a new random word & display word 
+  selectedWord = words[Math.floor(Math.random() * words.length)]
+  displayWord();
+
+  // clean up wrong letters element & hide popup 
+  updateWrongLettersEl();
+  popup.style.display = 'none';
+});
+
 
 displayWord();
